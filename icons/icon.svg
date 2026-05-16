@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" role="img" aria-label="SleepCalc icon">
+  <rect width="192" height="192" rx="42" fill="#050824"/>
+  <circle cx="96" cy="96" r="54" fill="#eee2a5"/>
+  <circle cx="118" cy="78" r="54" fill="#050824"/>
+  <circle cx="58" cy="56" r="3" fill="#f5f7fb" opacity="0.9"/>
+  <circle cx="142" cy="132" r="3" fill="#72b7ff" opacity="0.8"/>
+  <circle cx="52" cy="136" r="2" fill="#f5f7fb" opacity="0.75"/>
+</svg>

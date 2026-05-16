@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sleep Calculator — حاسبة النوم</title>
+  <meta name="description" content="Calculate your perfect bedtime and wake-up time based on sleep cycles." />
+  <meta name="theme-color" content="#0a0a12" />
+
+  <!-- PWA manifest: lets phones install the website like a small app. -->
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- Local CSS only, so the project still looks good offline. -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Decorative background. aria-hidden keeps screen readers focused on useful content. -->
+  <div class="stars" aria-hidden="true"></div>
+
+  <!-- Simple portfolio-style header: brand + one-line value proposition. -->
+  <header class="site-header">
+    <div class="logo">
+      <span class="logo-moon">☾</span>
+      <span class="logo-text">Sleep Calculator</span>
+    </div>
+    <p class="tagline">Wake up refreshed, every time.</p>
+  </header>
+
+  <main class="main">
+
+    <!-- Mode Toggle: the user chooses whether the known time is wake-up or bedtime. -->
+    <div class="mode-toggle" role="tablist" aria-label="Calculation mode">
+      <button class="mode-btn active" id="btn-wake" role="tab" aria-selected="true" aria-controls="panel-wake" onclick="switchMode('wake')">
+        <span class="mode-icon">☀</span>
+        I want to wake up at…
+      </button>
+      <button class="mode-btn" id="btn-bed" role="tab" aria-selected="false" aria-controls="panel-bed" onclick="switchMode('bed')">
+        <span class="mode-icon">☽</span>
+        I want to sleep at…
+      </button>
+    </div>
+
+    <!-- Wake-up Mode: calculate suggested bedtimes by counting sleep cycles backwards. -->
+    <section class="panel active" id="panel-wake" role="tabpanel" aria-labelledby="btn-wake">
+      <p class="panel-label">I want to wake up at</p>
+      <div class="time-input-group">
+        <div class="time-card">
+          <div class="time-picker" aria-live="polite">
+            <div class="wheel-column" data-mode="wake" data-field="h" role="slider" tabindex="0" aria-label="Wake hour">
+              <span class="wheel-option" id="wake-h-prev">06</span>
+              <span class="wheel-option active" id="wake-h-display">07</span>
+              <span class="wheel-option" id="wake-h-next">08</span>
+            </div>
+            <span class="colon">:</span>
+            <div class="wheel-column" data-mode="wake" data-field="m" role="slider" tabindex="0" aria-label="Wake minute">
+              <span class="wheel-option" id="wake-m-prev">59</span>
+              <span class="wheel-option active" id="wake-m-display">00</span>
+              <span class="wheel-option" id="wake-m-next">01</span>
+            </div>
+            <div class="ampm-toggle">
+              <button class="ampm-btn active" id="wake-am" onclick="setAmPm('wake','AM')">AM</button>
+              <button class="ampm-btn" id="wake-pm" onclick="setAmPm('wake','PM')">PM</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="calc-btn" onclick="calculate('wake')">
+        Calculate bedtimes
+        <span class="btn-arrow">→</span>
+      </button>
+    </section>
+
+    <!-- Bedtime Mode: calculate suggested wake-up times by counting sleep cycles forwards. -->
+    <section class="panel" id="panel-bed" role="tabpanel" aria-labelledby="btn-bed">
+      <p class="panel-label">I want to go to sleep at</p>
+      <div class="time-input-group">
+        <div class="time-card">
+          <div class="time-picker" aria-live="polite">
+            <div class="wheel-column" data-mode="bed" data-field="h" role="slider" tabindex="0" aria-label="Bed hour">
+              <span class="wheel-option" id="bed-h-prev">10</span>
+              <span class="wheel-option active" id="bed-h-display">11</span>
+              <span class="wheel-option" id="bed-h-next">12</span>
+            </div>
+            <span class="colon">:</span>
+            <div class="wheel-column" data-mode="bed" data-field="m" role="slider" tabindex="0" aria-label="Bed minute">
+              <span class="wheel-option" id="bed-m-prev">59</span>
+              <span class="wheel-option active" id="bed-m-display">00</span>
+              <span class="wheel-option" id="bed-m-next">01</span>
+            </div>
+            <div class="ampm-toggle">
+              <button class="ampm-btn" id="bed-am" onclick="setAmPm('bed','AM')">AM</button>
+              <button class="ampm-btn active" id="bed-pm" onclick="setAmPm('bed','PM')">PM</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="now-row">
+        <span class="now-divider">or</span>
+        <button class="now-btn" onclick="sleepNow()">
+          <span class="now-icon">⏱</span>
+          Go to sleep now
+        </button>
+      </div>
+      <button class="calc-btn" onclick="calculate('bed')">
+        Calculate wake-up times
+        <span class="btn-arrow">→</span>
+      </button>
+    </section>
+
+    <!-- Results are injected by JavaScript after the user clicks calculate. -->
+    <section class="results" id="results" aria-live="polite" aria-label="Sleep cycle results">
+      <div class="results-inner" id="results-inner"></div>
+    </section>
+
+    <!-- Quick education strip: keep it at the end so results stay first. -->
+    <section class="info-strip">
+      <div class="info-item">
+        <span class="info-num">90<small>min</small></span>
+        <span class="info-label">per cycle</span>
+      </div>
+      <div class="info-divider"></div>
+      <div class="info-item">
+        <span class="info-num">15<small>min</small></span>
+        <span class="info-label">to fall asleep</span>
+      </div>
+      <div class="info-divider"></div>
+      <div class="info-item">
+        <span class="info-num">4–6</span>
+        <span class="info-label">suggested cycles</span>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Based on sleep science — 90 min cycles + 15 min sleep onset</p>
+    <p class="copyright">© 2026 Sleep Calculator. All rights reserved.</p>
+  </footer>
+
+  <!-- App logic is loaded at the end so HTML exists before JavaScript reads it. -->
+  <script src="app.js"></script>
+</body>
+</html>
