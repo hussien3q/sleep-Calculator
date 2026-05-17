@@ -132,7 +132,7 @@ function cyclesToHours(n) {
 // Each cycle count gets a quick visual signal instead of a text badge.
 function getBadge(cycles) {
   if (cycles === 6) return { icon: '☺', label: 'Best option', cls: 'badge-green' };
-  if (cycles === 5) return { icon: '🙂', label: 'Good option', cls: 'badge-yellow' };
+  if (cycles === 5) return { icon: '🌝', label: 'Good option', cls: 'badge-yellow' };
   return { icon: '☹', label: 'Short sleep', cls: 'badge-red' };
 }
 
